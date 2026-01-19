@@ -168,6 +168,26 @@
       margin-top: 2rem;
     }
 
+    /* Responsive adjustments for mobile */
+    @media (max-width: 576px) {
+      .col-4 {
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+      }
+      
+      .col-3 {
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+      }
+      
+      .input-group .form-control,
+      .input-group .input-group-text {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        font-size: 0.9rem;
+      }
+    }
+
     @media (min-width: 576px) {
       .main-container { padding: 2rem 1.5rem; }
       .form-card { padding: 2rem 1.8rem; }
@@ -215,24 +235,24 @@
           </div>
         </div>
 
-        <div class="row g-3">
-          <div class="col-4">
+        <div class="row g-2">
+          <div class="col-5">
             <label for="patientAge" class="form-label required">Umur</label>
             <div class="input-group">
               <input type="number" class="form-control" id="patientAge" name="patientAge" min="15" max="60" required>
               <span class="input-group-text">th</span>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-5">
             <label for="pregnancyAge" class="form-label required">Usia Hamil</label>
             <div class="input-group">
               <input type="number" class="form-control" id="pregnancyAge" name="pregnancyAge" min="1" max="42" required>
               <span class="input-group-text">mg</span>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-2">
             <label for="pregnancyNumber" class="form-label required">Hamil ke</label>
-            <input type="number" class="form-control" id="pregnancyNumber" name="pregnancyNumber" min="1" max="15" required>
+            <input type="number" class="form-control text-center" id="pregnancyNumber" name="pregnancyNumber" min="1" max="15" required>
           </div>
         </div>
 
@@ -243,9 +263,6 @@
     </div>
   </div>
 
-  <footer>
-    <p>© 2024 Klinik Pratama Mutiara Agma. Semua hak dilindungi.</p>
-  </footer>
 
   <script>
     const form = document.getElementById('patientForm');
