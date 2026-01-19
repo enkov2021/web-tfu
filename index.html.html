@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Database Pasien - Klinik Pratama Mutiara Agma</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #1976d2;
+      --primary-light: #4791db;
+      --accent: #e91e63;
+      --light-bg: #f8fbff;
+      --card-border: #e3f2fd;
+      --text-muted: #455a64;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--light-bg);
+      color: #333;
+      font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background: #ffffff;
+      color: var(--primary);
+      padding: 1.5rem 0.8rem;
+      text-align: center;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      position: relative;
+      z-index: 10;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 4px solid var(--primary);
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0.4rem 0;
+      line-height: 1.3;
+      padding: 0 0.5rem;
+      color: var(--primary);
+    }
+
+    .header .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+      padding: 0 0.5rem;
+      line-height: 1.4;
+    }
+
+    .clinic-info {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      padding: 0 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .clinic-info i {
+      font-size: 0.75rem;
+      min-width: 16px;
+      color: var(--primary);
+    }
+
+    .main-container {
+      flex: 1;
+      padding: 1rem 0.8rem;
+      max-width: 100%;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.2rem 1rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--card-border);
+      margin: 0 auto;
+      width: 100%;
+      margin-top: -40px; /* Membuat form card sedikit overlap dengan header */
+      position: relative;
+      z-index: 20;
+    }
+
+    .form-title {
+      color: var(--primary);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.7rem;
+      line-height: 1.4;
+    }
+
+    .form-title i {
+      font-size: 1.2rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #37474f;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    .form-label.required::after {
+      content: " *";
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .form-control, .form-select {
+      border: 1.5px solid #bbdefb;
+      border-radius: 10px;
+      padding: 0.8rem 0.9rem;
+      font-size: 1rem;
+      height: auto;
+      min-height: 48px;
+      width: 100%;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.15);
+      outline: none;
+    }
+
+    .input-group {
+      width: 100%;
+      display: flex;
+    }
+
+    .input-group-text {
+      background: #e3f2fd;
+      border: 1.5px solid #bbdefb;
+      border-radius: 10px;
+      font-weight: 500;
+      min-width: 50px;
+      padding: 0.8rem 0.9rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-submit {
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border: none;
+      border-radius: 12px;
+      padding: 0.9rem;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      box-shadow: 0 4px 15px rgba(25, 118, 210, 0.25);
+      transition: all 0.3s ease;
+      width: 100%;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-submit:hover, .btn-submit:active {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(25, 118, 210, 0.35);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.7;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .alert-message {
+      border-radius: 10px;
+      padding: 0.9rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.9rem;
+      display: none;
+      line-height: 1.4;
+    }
+
+    .alert-success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border-left: 4px solid #4caf50;
+    }
+
+    .alert-danger {
+      background: #ffebee;
+      color: #c62828;
+      border-left: 4px solid #3688f4;
+    }
+
+    footer {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 0.8rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      border-top: 1px solid #bbdefb;
+      margin-top: auto;
+      width: 100%;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    footer p {
+      margin: 0.3rem 0;
+      line-height: 1.4;
+    }
+
+    /* Responsive grid untuk mobile */
+    .row.g-3 {
+      margin: 0 -0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .row.g-3 > [class*="col-"] {
+      padding: 0 0.5rem;
+      margin-bottom: 1rem;
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+
+    /* Untuk tablet kecil ke atas */
+    @media (min-width: 576px) {
+      .header {
+        padding: 1.8rem 1rem;
+        min-height: 220px;
+      }
+      
+      .header h1 {
+        font-size: 1.7rem;
+      }
+      
+      .main-container {
+        padding: 1.2rem 1rem;
+        max-width: 540px;
+      }
+      
+      .form-card {
+        padding: 1.5rem 1.2rem;
+        margin-top: -50px;
+      }
+      
+      .row.g-3 > .col-12.col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .main-container {
+        max-width: 640px;
+      }
+      
+      .row.g-3 > .col-12.col-md-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+      }
+      
+      .form-title {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Pencegahan zoom pada input */
+    @media (max-width: 480px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+      
+      .form-control, .form-select {
+        font-size: 16px;
+      }
+    }
+
+    /* Touch optimization */
+    .form-control, .form-select, .btn-submit, .input-group-text {
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    /* Better spacing for mobile */
+    .mb-3 {
+      margin-bottom: 1rem !important;
+    }
+
+    /* Fix untuk keyboard di mobile */
+    @media (max-height: 600px) and (orientation: landscape) {
+      .header {
+        padding: 1rem 0.8rem;
+        min-height: 160px;
+      }
+      
+      .header h1 {
+        font-size: 1.3rem;
+      }
+      
+      .form-card {
+        padding: 1rem 0.8rem;
+        margin-top: -30px;
+      }
+    }
+
+    /* Safe area untuk iPhone X dan newer */
+    @supports (padding: max(0px)) {
+      body, .header, .main-container, footer {
+        padding-left: max(0.8rem, env(safe-area-inset-left));
+        padding-right: max(0.8rem, env(safe-area-inset-right));
+      }
+      
+      .header {
+        padding-top: max(1.5rem, env(safe-area-inset-top));
+      }
+      
+      footer {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>Database Pasien</h1>
+    <p class="subtitle">Sistem Pencatatan Data Kebidanan & Kehamilan</p>
+    <div class="clinic-info">
+      <div><i class="fas fa-clinic-medical me-2"></i><strong>Klinik Pratama Mutiara Agma</strong></div>
+      <div><i class="fas fa-map-marker-alt me-2"></i>Jl. Soeprapto Dalam, RT.40/RW.06, Betungan</div>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <div class="form-card">
+      <div id="successMessage" class="alert-message alert-success">
+        <i class="fas fa-check-circle me-2"></i><strong>Berhasil!</strong> Data pasien telah tersimpan.
+      </div>
+
+      <div id="errorMessage" class="alert-message alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i><strong>Gagal!</strong> Terjadi kesalahan, silakan coba lagi.
+      </div>
+
+      <h2 class="form-title">
+        <i class="fas fa-user-plus me-2"></i>Input Data Pasien
+      </h2>
+
+      <form id="patientForm" method="POST" action="https://script.google.com/macros/s/AKfycbyqoDmcx7vzmgY8kRf94hCS41Be2bJttx0k9nsPCJCp5GbHQKK9P5FPxA6lfoOup6EVsw/exec">
+        
+        <div class="mb-3">
+          <label for="bidanName" class="form-label required">Nama Bidan</label>
+          <input type="text" class="form-control" id="bidanName" name="bidanName" required placeholder=>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label required">Nama Pasien</label>
+          <div class="input-group">
+            <span class="input-group-text">Ny.</span>
+            <input type="text" class="form-control" id="patientNameInput" required placeholder=>
+          </div>
+        </div>
+
+        <!-- Hidden field untuk mengirim nama lengkap dengan "Ny." -->
+        <input type="hidden" name="patientName" id="patientName">
+
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <label for="patientAge" class="form-label required">Umur Pasien</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="patientAge" name="patientAge" min="15" max="60" required placeholder=>
+              <span class="input-group-text">thn</span>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <label for="pregnancyAge" class="form-label required">Usia Kehamilan</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="pregnancyAge" name="pregnancyAge" min="1" max="42" required placeholder=>
+              <span class="input-group-text">mgg</span>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <label for="pregnancyNumber" class="form-label required">Hamil ke-</label>
+            <input type="number" class="form-control" id="pregnancyNumber" name="pregnancyNumber" min="1" max="20" required placeholder=>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-submit text-white">
+          <i class="fas fa-save"></i>
+          <span>Simpan Data Pasien</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('patientForm');
+      const successMsg = document.getElementById('successMessage');
+      const errorMsg = document.getElementById('errorMessage');
+      const patientNameInput = document.getElementById('patientNameInput');
+      const patientNameHidden = document.getElementById('patientName');
+      const submitBtn = form.querySelector('.btn-submit');
+
+      // Prevent form resubmission on refresh
+      if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+      }
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!form.checkValidity()) {
+          // Show validation messages
+          form.classList.add('was-validated');
+          // Scroll to first invalid input
+          const firstInvalid = form.querySelector(':invalid');
+          if (firstInvalid) {
+            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstInvalid.focus();
+          }
+          return;
+        }
+
+        // Format nama pasien dengan "Ny."
+        const namaLengkap = 'Ny. ' + patientNameInput.value.trim();
+        patientNameHidden.value = namaLengkap;
+
+        // Show loading state
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Menyimpan...</span>';
+        submitBtn.disabled = true;
+
+        // Submit data
+        fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          mode: 'no-cors'
+        })
+        .then(() => {
+          // Show success message
+          successMsg.style.display = 'flex';
+          successMsg.style.alignItems = 'center';
+          errorMsg.style.display = 'none';
+          
+          // Reset form
+          form.reset();
+          form.classList.remove('was-validated');
+          patientNameHidden.value = '';
+          
+          // Hide success message after 5 seconds
+          setTimeout(() => {
+            successMsg.style.display = 'none';
+          }, 5000);
+          
+          // Scroll to top to show success message
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          errorMsg.style.display = 'flex';
+          errorMsg.style.alignItems = 'center';
+          successMsg.style.display = 'none';
+          
+          // Scroll to show error
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .finally(() => {
+          // Restore button
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        });
+      });
+
+      // Auto-hide messages on input
+      form.addEventListener('input', function() {
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'none';
+      });
+
+      // Better touch handling for mobile
+      document.querySelectorAll('input, select').forEach(element => {
+        element.addEventListener('touchstart', function(e) {
+          this.style.backgroundColor = '#f5f9ff';
+        });
+        
+        element.addEventListener('touchend', function(e) {
+          this.style.backgroundColor = '';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
