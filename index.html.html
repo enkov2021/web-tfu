@@ -94,7 +94,6 @@
       border-radius: 12px;
       padding: 0.7rem 1rem;
       font-size: 1rem;
-      height: 46px;
     }
 
     .form-control:focus {
@@ -103,10 +102,20 @@
     }
 
     .input-group-text {
-      border: 2px solid #f8bbd0;
-      border-radius: 12px;
       background: #fff0f5;
-      font-size: 0.95rem;
+      border: 2px solid #f8bbd0;
+      font-weight: 500;
+      color: #4a148c;
+    }
+
+    .input-group .input-group-text {
+      border-right: 0;
+      border-radius: 12px 0 0 12px;
+    }
+
+    .input-group .form-control {
+      border-left: 0;
+      border-radius: 0 12px 12px 0;
     }
 
     .required::after {
@@ -132,6 +141,12 @@
       box-shadow: 0 8px 24px rgba(233,30,99,0.45);
     }
 
+    .btn-submit:disabled {
+      opacity: 0.7;
+      transform: none !important;
+      box-shadow: 0 4px 16px rgba(233,30,99,0.35) !important;
+    }
+
     .alert-message {
       border-radius: 12px;
       padding: 0.9rem;
@@ -150,7 +165,7 @@
       font-size: 0.82rem;
       background: rgba(255,255,255,0.5);
       border-top: 1px solid #f8bbd0;
-      margin-top: auto;
+      margin-top: 2rem;
     }
 
     @media (min-width: 576px) {
@@ -194,7 +209,10 @@
 
         <div class="mb-3">
           <label for="patientName" class="form-label required">Nama Pasien</label>
-          <input type="text" class="form-control" id="patientName" name="patientName" required placeholder="Nama lengkap pasien">
+          <div class="input-group">
+            <span class="input-group-text">Ny.</span>
+            <input type="text" class="form-control" id="patientName" name="patientName" required placeholder="Nama lengkap pasien">
+          </div>
         </div>
 
         <div class="row g-3">
@@ -225,11 +243,42 @@
     </div>
   </div>
 
+  <footer>
+    <p>© 2024 Klinik Pratama Mutiara Agma. Semua hak dilindungi.</p>
+  </footer>
 
   <script>
     const form = document.getElementById('patientForm');
     const successMsg = document.getElementById('successMessage');
     const errorMsg = document.getElementById('errorMessage');
+    const patientNameInput = document.getElementById('patientName');
+
+    // Format nama pasien dengan "Ny." di depan
+    function formatPatientName(name) {
+      name = name.trim();
+      
+      // Hapus "Ny." jika sudah ada di awal
+      if (name.toLowerCase().startsWith('ny. ')) {
+        name = name.substring(4);
+      } else if (name.toLowerCase().startsWith('ny')) {
+        name = name.substring(2).trim();
+        if (name.startsWith('. ')) {
+          name = name.substring(2);
+        } else if (name.startsWith('.')) {
+          name = name.substring(1);
+        }
+      }
+      
+      // Tambahkan "Ny." di depan
+      return 'Ny. ' + name;
+    }
+
+    // Format nama saat input kehilangan fokus
+    patientNameInput.addEventListener('blur', function() {
+      if (patientNameInput.value.trim()) {
+        patientNameInput.value = formatPatientName(patientNameInput.value);
+      }
+    });
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -238,6 +287,11 @@
         alert('Mohon lengkapi semua kolom bertanda bintang ya~');
         form.reportValidity();
         return;
+      }
+
+      // Format nama pasien sebelum dikirim
+      if (patientNameInput.value.trim()) {
+        patientNameInput.value = formatPatientName(patientNameInput.value);
       }
 
       const btn = form.querySelector('.btn-submit');
