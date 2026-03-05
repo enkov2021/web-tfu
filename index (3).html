@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Klinik Pratama Mutiara Agma</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary:      #e91e63;
+      --primary-dark: #c2185b;
+      --accent:       #ff80ab;
+      --light-pink:   #fce4ec;
+      --text-dark:    #4a148c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ════════════════════════════════
+       SHARED AUTH BACKGROUND
+    ════════════════════════════════ */
+    .auth-page {
+      min-height: 100vh;
+      background: linear-gradient(150deg, #ad1457 0%, var(--primary) 55%, #f06292 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .auth-page::before, .auth-page::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .auth-page::before {
+      width: 380px; height: 380px;
+      background: #ff80ab;
+      top: -100px; left: -100px;
+    }
+    .auth-page::after {
+      width: 300px; height: 300px;
+      background: #ce93d8;
+      bottom: -80px; right: -80px;
+    }
+
+    .auth-wrapper {
+      width: 100%;
+      max-width: 430px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(173,20,87,0.35);
+      overflow: hidden;
+      animation: slideUp 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(36px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+
+    /* ── Card Header ── */
+    .ac-header {
+      background: linear-gradient(135deg, #ad1457, var(--primary));
+      padding: 28px 28px 26px;
+      text-align: center;
+      position: relative;
+    }
+
+    .ac-header::after {
+      content: '';
+      position: absolute;
+      bottom: -14px; left: 50%;
+      transform: translateX(-50%);
+      width: 28px; height: 28px;
+      background: white;
+      clip-path: polygon(50% 100%, 0 0, 100% 0);
+    }
+
+    .icon-wrap {
+      width: 62px; height: 62px;
+      background: rgba(255,255,255,0.18);
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 1.7rem;
+      color: #ffcdd2;
+    }
+
+    .ac-header h1 {
+      color: white;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .ac-header p {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.78rem;
+    }
+
+    /* ── Card Body ── */
+    .ac-body {
+      padding: 36px 28px 26px;
+    }
+
+    .page-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 3px;
+    }
+
+    .page-sub {
+      color: #9e9e9e;
+      font-size: 0.83rem;
+      margin-bottom: 22px;
+    }
+
+    /* ── Alerts ── */
+    .msg-box {
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.86rem;
+      display: none;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 16px;
+    }
+    .msg-box.show { display: flex; }
+    .msg-error   { background:#ffebee; border-left:4px solid #c62828; color:#b71c1c; animation: shake 0.4s ease; }
+    .msg-success { background:#e8f5e9; border-left:4px solid #2e7d32; color:#1b5e20; }
+    .msg-info    { background:#e3f2fd; border-left:4px solid #1565c0; color:#0d47a1; }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-5px); }
+      40%,80%  { transform: translateX(5px); }
+    }
+
+    /* ── Form elements ── */
+    .f-label {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .input-wrap {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .input-ico {
+      position: absolute;
+      left: 14px;
+      top: 50%; transform: translateY(-50%);
+      color: #e91e6366;
+      font-size: 0.9rem;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    .input-wrap:focus-within .input-ico { color: var(--primary); }
+
+    .f-control {
+      border: 2px solid #f8bbd0;
+      border-radius: 12px;
+      padding: 11px 42px 11px 40px;
+      font-size: 0.95rem;
+      width: 100%;
+      transition: all 0.25s;
+      background: #fff8fa;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .f-control.no-left-pad { padding-left: 14px; }
+
+    .f-control:focus {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(233,30,99,0.1);
+    }
+
+    .f-control.is-error {
+      border-color: #c62828;
+      box-shadow: 0 0 0 4px rgba(198,40,40,0.1);
+    }
+
+    .toggle-pwd {
+      position: absolute;
+      right: 12px;
+      top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: #e91e6366; font-size: 0.9rem;
+      transition: color 0.2s; padding: 0;
+    }
+    .toggle-pwd:hover { color: var(--primary); }
+
+    /* Password strength bar */
+    .pwd-strength {
+      height: 4px;
+      border-radius: 4px;
+      background: #f8bbd0;
+      margin-top: -10px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .pwd-strength-bar {
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.3s, background 0.3s;
+    }
+    .strength-0 { width: 0%; }
+    .strength-1 { width: 25%; background: #ef5350; }
+    .strength-2 { width: 50%; background: #ff9800; }
+    .strength-3 { width: 75%; background: #fdd835; }
+    .strength-4 { width: 100%; background: #4caf50; }
+
+    .pwd-hint {
+      font-size: 0.75rem;
+      color: #9e9e9e;
+      margin-top: -12px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary-full {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 0.98rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 4px 16px rgba(233,30,99,0.35);
+      transition: all 0.25s;
+      margin-top: 4px;
+      font-family: inherit;
+    }
+
+    .btn-primary-full:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(233,30,99,0.42);
+    }
+
+    .btn-primary-full:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    /* ── Link row ── */
+    .link-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .link-row a, .text-link {
+      font-size: 0.82rem;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      transition: color 0.2s;
+    }
+
+    .link-row a:hover, .text-link:hover { color: var(--primary-dark); text-decoration: underline; }
+
+    .link-row .muted { color: #9e9e9e; font-size: 0.82rem; }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0;
+      color: #ccc;
+      font-size: 0.78rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: #f0c0d0;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 17px; height: 17px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+    .btn-primary-full.loading .spinner { display: block; }
+    .btn-primary-full.loading .btn-lbl { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Select ── */
+    select.f-control { padding-left: 40px; }
+
+    /* ════════════════════════════════
+       DATABASE PAGE
+    ════════════════════════════════ */
+    #dbPage {
+      display: none;
+      background: var(--light-pink);
+      min-height: 100vh;
+    }
+    #dbPage.show { display: block; }
+
+    .db-header {
+      background: linear-gradient(135deg, #ad1457 0%, var(--primary) 100%);
+      color: white;
+      padding: 1.6rem 1rem 2rem;
+      text-align: center;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 4px 18px rgba(233,30,99,0.28);
+      position: relative;
+    }
+
+    .db-header .main-icon {
+      font-size: 2.6rem;
+      margin-bottom: 0.6rem;
+      color: #ff80ab;
+      display: block;
+    }
+
+    .db-header h1 { font-size: 1.75rem; margin: 0.3rem 0; font-weight: 700; }
+    .db-header .subtitle { font-size: 0.93rem; opacity: 0.9; margin: 0.2rem 0 0.5rem; }
+    .clinic-name { font-size: 1.05rem; font-weight: 600; }
+
+    .header-actions {
+      position: absolute;
+      top: 14px; right: 14px;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+    }
+
+    .logged-as {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      padding: 3px 10px;
+      font-size: 0.73rem;
+      color: rgba(255,255,255,0.9);
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    .btn-logout {
+      background: rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      color: white;
+      border-radius: 10px;
+      padding: 5px 13px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,0.35); }
+
+    .main-container {
+      padding: 1.4rem 1rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.6rem 1.3rem;
+      box-shadow: 0 6px 22px rgba(233,30,99,0.16);
+      border: 1px solid #f8bbd0;
+    }
+
+    .form-title {
+      color: var(--primary);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.4rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 3px solid var(--accent);
+      text-align: center;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.4rem;
+      font-size: 0.93rem;
+    }
+
+    .form-control {
+      border: 2px solid #f8bbd0;
+      border-radius: 12px;
+      padding: 0.65rem 1rem;
+      font-size: 0.97rem;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(233,30,99,0.13);
+    }
+
+    .input-group-text {
+      background: #fff0f5;
+      border: 2px solid #f8bbd0;
+      font-weight: 500;
+      color: #4a148c;
+    }
+    .input-group .input-group-text { border-right:0; border-radius:12px 0 0 12px; }
+    .input-group .form-control { border-left:0; border-radius:0 12px 12px 0; }
+
+    .required::after { content:" *"; color:#c2185b; }
+
+    .btn-submit {
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      border: none;
+      border-radius: 14px;
+      padding: 0.82rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-top: 1.4rem;
+      box-shadow: 0 4px 16px rgba(233,30,99,0.33);
+      transition: all 0.25s;
+    }
+    .btn-submit:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(233,30,99,0.43); }
+    .btn-submit:disabled { opacity:0.7; transform:none!important; }
+
+    .alert-message {
+      border-radius: 12px;
+      padding: 0.88rem;
+      margin-bottom: 1.3rem;
+      font-size: 0.93rem;
+      display: none;
+    }
+    .alert-success { background:#e8f5e9; color:#1b5e20; border-left:5px solid #2e7d32; }
+    .alert-danger  { background:#ffebee; color:#b71c1c; border-left:5px solid #c62828; }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      color: #555;
+      font-size: 0.8rem;
+      background: rgba(255,255,255,0.5);
+      border-top: 1px solid #f8bbd0;
+      margin-top: 2rem;
+    }
+
+    .page-fade { animation: pageFade 0.4s ease both; }
+    @keyframes pageFade {
+      from { opacity:0; transform:translateY(14px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* Steps indicator (reset password) */
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #f8bbd0;
+      transition: all 0.3s;
+    }
+    .step-dot.active { background: var(--primary); width: 22px; border-radius: 4px; }
+    .step-dot.done   { background: #4caf50; }
+
+    @media (max-width: 576px) {
+      .col-4,.col-3 { padding-left:.25rem; padding-right:.25rem; }
+      .input-group .form-control,
+      .input-group .input-group-text { padding-left:.5rem; padding-right:.5rem; font-size:.88rem; }
+      .main-container { padding:1.2rem .8rem; }
+      .form-card { padding:1.3rem 1rem; }
+    }
+    @media (min-width:576px) {
+      .main-container { padding:2rem 1.5rem; }
+      .form-card { padding:2rem 1.8rem; }
+      .db-header h1 { font-size:2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     PAGE 1 — LOGIN
+══════════════════════════════════════════ -->
+<div class="auth-page" id="loginPage">
+  <div class="auth-wrapper">
+    <div class="auth-card">
+
+      <div class="ac-header">
+        <div class="icon-wrap"><i class="fas fa-heartbeat"></i></div>
+        <h1>Klinik Pratama Mutiara Agma</h1>
+        <p>Database Pasien — Kebidanan &amp; Kehamilan</p>
+      </div>
+
+      <div class="ac-body">
+        <div class="msg-box msg-error" id="loginErr">
+          <i class="fas fa-circle-exclamation"></i>
+          <span id="loginErrTxt">Username atau password salah.</span>
+        </div>
+
+        <form id="loginForm" autocomplete="off">
+          <label class="f-label" for="lu">Username</label>
+          <div class="input-wrap">
+            <i class="fas fa-user input-ico"></i>
+            <input class="f-control" type="text" id="lu" placeholder="Masukkan username" required>
+          </div>
+
+          <label class="f-label" for="lp">Password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock input-ico"></i>
+            <input class="f-control" type="password" id="lp" placeholder="Masukkan password" required>
+            <button type="button" class="toggle-pwd" data-target="lp" data-icon="lp-eye">
+              <i class="fas fa-eye" id="lp-eye"></i>
+            </button>
+          </div>
+
+          <button type="submit" class="btn-primary-full" id="btnLogin">
+            <div class="spinner"></div>
+            <span class="btn-lbl"><i class="fas fa-right-to-bracket"></i> Masuk</span>
+          </button>
+        </form>
+
+        <div class="link-row">
+          <span class="muted">Belum punya akun?
+            <button class="text-link" onclick="goTo('registerPage')">Daftar</button>
+          </span>
+          <button class="text-link" onclick="goTo('resetPage')">
+            <i class="fas fa-key fa-xs"></i> Lupa Password?
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 2 — DAFTAR AKUN
+══════════════════════════════════════════ -->
+<div class="auth-page" id="registerPage" style="display:none">
+  <div class="auth-wrapper">
+    <div class="auth-card">
+
+      <div class="ac-header">
+        <div class="icon-wrap"><i class="fas fa-user-plus"></i></div>
+        <h1>Klinik Pratama Mutiara Agma</h1>
+        <p>Buat akun baru untuk mengakses sistem</p>
+      </div>
+
+      <div class="ac-body">
+        <h2 class="page-title">Daftar Akun ✨</h2>
+        <p class="page-sub">Isi data di bawah untuk membuat akun baru.</p>
+
+        <div class="msg-box msg-error" id="regErr">
+          <i class="fas fa-circle-exclamation"></i>
+          <span id="regErrTxt">Terjadi kesalahan.</span>
+        </div>
+
+        <form id="registerForm" autocomplete="off">
+          <label class="f-label" for="ru">Username</label>
+          <div class="input-wrap">
+            <i class="fas fa-user input-ico"></i>
+            <input class="f-control" type="text" id="ru" placeholder="Buat username (min. 4 karakter)" required minlength="4">
+          </div>
+
+          <label class="f-label" for="rp">Password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock input-ico"></i>
+            <input class="f-control" type="password" id="rp" placeholder="Buat password (min. 6 karakter)" required minlength="6">
+            <button type="button" class="toggle-pwd" data-target="rp" data-icon="rp-eye">
+              <i class="fas fa-eye" id="rp-eye"></i>
+            </button>
+          </div>
+          <div class="pwd-strength"><div class="pwd-strength-bar" id="strengthBar"></div></div>
+          <p class="pwd-hint" id="strengthTxt">Masukkan password</p>
+
+          <label class="f-label" for="rp2">Konfirmasi Password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock input-ico"></i>
+            <input class="f-control" type="password" id="rp2" placeholder="Ulangi password" required>
+            <button type="button" class="toggle-pwd" data-target="rp2" data-icon="rp2-eye">
+              <i class="fas fa-eye" id="rp2-eye"></i>
+            </button>
+          </div>
+
+          <div class="divider">Pertanyaan Keamanan</div>
+
+          <label class="f-label" for="rq">Pilih Pertanyaan</label>
+          <div class="input-wrap">
+            <i class="fas fa-circle-question input-ico"></i>
+            <select class="f-control" id="rq" required>
+              <option value="">-- Pilih pertanyaan --</option>
+              <option value="q1">Nama hewan peliharaan pertama Anda?</option>
+              <option value="q2">Nama ibu kandung Anda?</option>
+              <option value="q3">Kota tempat Anda lahir?</option>
+              <option value="q4">Nama sekolah dasar Anda?</option>
+              <option value="q5">Makanan favorit Anda?</option>
+            </select>
+          </div>
+
+          <label class="f-label" for="ra">Jawaban</label>
+          <div class="input-wrap">
+            <i class="fas fa-comment-dots input-ico"></i>
+            <input class="f-control" type="text" id="ra" placeholder="Jawaban rahasia Anda" required>
+          </div>
+
+          <button type="submit" class="btn-primary-full" id="btnRegister">
+            <div class="spinner"></div>
+            <span class="btn-lbl"><i class="fas fa-user-check"></i> Buat Akun</span>
+          </button>
+        </form>
+
+        <div class="link-row" style="justify-content:center">
+          <span class="muted">Sudah punya akun?
+            <button class="text-link" onclick="goTo('loginPage')">Masuk di sini</button>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 3 — RESET PASSWORD
+══════════════════════════════════════════ -->
+<div class="auth-page" id="resetPage" style="display:none">
+  <div class="auth-wrapper">
+    <div class="auth-card">
+
+      <div class="ac-header">
+        <div class="icon-wrap"><i class="fas fa-shield-halved"></i></div>
+        <h1>Klinik Pratama Mutiara Agma</h1>
+        <p>Pemulihan akun &amp; reset password</p>
+      </div>
+
+      <div class="ac-body">
+        <h2 class="page-title">Reset Password 🔑</h2>
+        <p class="page-sub" id="resetSubText">Masukkan username Anda untuk memulai.</p>
+
+        <!-- Steps indicator -->
+        <div class="steps">
+          <div class="step-dot active" id="sd1"></div>
+          <div class="step-dot" id="sd2"></div>
+          <div class="step-dot" id="sd3"></div>
+        </div>
+
+        <div class="msg-box msg-error" id="resetErr">
+          <i class="fas fa-circle-exclamation"></i>
+          <span id="resetErrTxt">Terjadi kesalahan.</span>
+        </div>
+        <div class="msg-box msg-success" id="resetOk">
+          <i class="fas fa-check-circle"></i>
+          <span id="resetOkTxt">Password berhasil diubah!</span>
+        </div>
+
+        <!-- Step 1: Cari username -->
+        <div id="resetStep1">
+          <label class="f-label" for="rsu">Username</label>
+          <div class="input-wrap">
+            <i class="fas fa-user input-ico"></i>
+            <input class="f-control" type="text" id="rsu" placeholder="Masukkan username Anda" required>
+          </div>
+          <button class="btn-primary-full" id="btnStep1" onclick="resetStep1()">
+            <span class="btn-lbl"><i class="fas fa-arrow-right"></i> Lanjutkan</span>
+          </button>
+        </div>
+
+        <!-- Step 2: Jawab pertanyaan keamanan -->
+        <div id="resetStep2" style="display:none">
+          <div class="msg-box msg-info show" id="resetQuestion" style="margin-bottom:16px">
+            <i class="fas fa-circle-question"></i>
+            <span id="resetQuestionTxt"></span>
+          </div>
+          <label class="f-label" for="rsa">Jawaban Keamanan</label>
+          <div class="input-wrap">
+            <i class="fas fa-comment-dots input-ico"></i>
+            <input class="f-control" type="text" id="rsa" placeholder="Jawaban Anda" required>
+          </div>
+          <button class="btn-primary-full" id="btnStep2" onclick="resetStep2()">
+            <span class="btn-lbl"><i class="fas fa-arrow-right"></i> Verifikasi</span>
+          </button>
+        </div>
+
+        <!-- Step 3: Password baru -->
+        <div id="resetStep3" style="display:none">
+          <label class="f-label" for="rnp">Password Baru</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock input-ico"></i>
+            <input class="f-control" type="password" id="rnp" placeholder="Password baru (min. 6 karakter)" required minlength="6">
+            <button type="button" class="toggle-pwd" data-target="rnp" data-icon="rnp-eye">
+              <i class="fas fa-eye" id="rnp-eye"></i>
+            </button>
+          </div>
+          <div class="pwd-strength"><div class="pwd-strength-bar" id="strengthBar2"></div></div>
+          <p class="pwd-hint" id="strengthTxt2">Masukkan password baru</p>
+
+          <label class="f-label" for="rnp2">Konfirmasi Password Baru</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock input-ico"></i>
+            <input class="f-control" type="password" id="rnp2" placeholder="Ulangi password baru" required>
+            <button type="button" class="toggle-pwd" data-target="rnp2" data-icon="rnp2-eye">
+              <i class="fas fa-eye" id="rnp2-eye"></i>
+            </button>
+          </div>
+          <button class="btn-primary-full" id="btnStep3" onclick="resetStep3()">
+            <span class="btn-lbl"><i class="fas fa-check"></i> Simpan Password Baru</span>
+          </button>
+        </div>
+
+        <div class="link-row" style="justify-content:center; margin-top:16px">
+          <button class="text-link" onclick="goTo('loginPage')">
+            <i class="fas fa-arrow-left fa-xs"></i> Kembali ke Login
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 4 — DATABASE PASIEN
+══════════════════════════════════════════ -->
+<div id="dbPage">
+
+  <header class="db-header">
+    <div class="header-actions">
+      <div class="logged-as" id="loggedAsLabel">
+        <i class="fas fa-circle-user"></i> <span id="loggedAsName">—</span>
+      </div>
+      <button class="btn-logout" id="btnLogout">
+        <i class="fas fa-right-from-bracket"></i> Keluar
+      </button>
+    </div>
+    <i class="fas fa-heartbeat main-icon"></i>
+    <h1>Database Pasien</h1>
+    <p class="subtitle">Pencatatan Data Kebidanan &amp; Kehamilan</p>
+    <div class="clinic-name">
+      <i class="fas fa-clinic-medical me-2"></i>Klinik Pratama Mutiara Agma
+    </div>
+  </header>
+
+  <div class="main-container">
+    <div class="form-card">
+
+      <div id="successMessage" class="alert-message alert-success">
+        <i class="fas fa-check-circle me-2"></i><strong>Berhasil!</strong> Data pasien tersimpan.
+      </div>
+      <div id="errorMessage" class="alert-message alert-danger">
+        <i class="fas fa-exclamation-circle me-2"></i><strong>Gagal!</strong> Coba kirim ulang.
+      </div>
+
+      <h2 class="form-title">
+        <i class="fas fa-baby-carriage me-2"></i>Input Data Pasien
+      </h2>
+
+      <form id="patientForm" method="POST"
+            action="https://script.google.com/macros/s/AKfycbyqoDmcx7vzmgY8kRf94hCS41Be2bJttx0k9nsPCJCp5GbHQKK9P5FPxA6lfoOup6EVsw/exec">
+
+        <div class="mb-3">
+          <label for="bidanName" class="form-label required">Nama Bidan</label>
+          <input type="text" class="form-control" id="bidanName" name="bidanName"
+                 required placeholder="Nama lengkap bidan">
+        </div>
+
+        <div class="mb-3">
+          <label for="patientName" class="form-label required">Nama Pasien</label>
+          <div class="input-group">
+            <span class="input-group-text">Ny.</span>
+            <input type="text" class="form-control" id="patientName" name="patientName"
+                   required placeholder="Nama lengkap pasien">
+          </div>
+        </div>
+
+        <div class="row g-2">
+          <div class="col-5">
+            <label for="patientAge" class="form-label required">Umur</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="patientAge" name="patientAge"
+                     min="15" max="60" required>
+              <span class="input-group-text">th</span>
+            </div>
+          </div>
+          <div class="col-5">
+            <label for="pregnancyAge" class="form-label required">Usia Hamil</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="pregnancyAge" name="pregnancyAge"
+                     min="1" max="42" required>
+              <span class="input-group-text">mg</span>
+            </div>
+          </div>
+          <div class="col-2">
+            <label for="pregnancyNumber" class="form-label required">Hamil ke</label>
+            <input type="number" class="form-control text-center" id="pregnancyNumber"
+                   name="pregnancyNumber" min="1" max="15" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-submit w-100 text-white">
+          <i class="fas fa-save me-2"></i>Simpan Data
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Klinik Pratama Mutiara Agma. All rights reserved.
+  </footer>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════ -->
+<script>
+  /* ─── STORAGE HELPERS ─── */
+  const STORE_KEY = 'klinik_accounts';
+
+  function getAccounts() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
+    catch { return []; }
+  }
+
+  function saveAccounts(arr) {
+    localStorage.setItem(STORE_KEY, JSON.stringify(arr));
+  }
+
+  function findAccount(username) {
+    return getAccounts().find(a => a.username.toLowerCase() === username.toLowerCase());
+  }
+
+  // Seed default admin on first load
+  (function seedDefault() {
+    if (!findAccount('bidan')) {
+      const accounts = getAccounts();
+      accounts.push({
+        username: 'bidan',
+        password: 'mutiara2025',
+        question:  'q2',
+        answer:    'admin'
+      });
+      saveAccounts(accounts);
+    }
+  })();
+
+  const QUESTIONS = {
+    q1: 'Nama hewan peliharaan pertama Anda?',
+    q2: 'Nama ibu kandung Anda?',
+    q3: 'Kota tempat Anda lahir?',
+    q4: 'Nama sekolah dasar Anda?',
+    q5: 'Makanan favorit Anda?',
+  };
+
+  /* ─── PAGE NAV ─── */
+  const pages = ['loginPage','registerPage','resetPage'];
+
+  function goTo(pageId) {
+    pages.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    document.getElementById('dbPage').classList.remove('show');
+
+    if (pageId === 'dbPage') {
+      document.getElementById('dbPage').classList.add('show');
+      document.getElementById('dbPage').classList.add('page-fade');
+    } else {
+      const el = document.getElementById(pageId);
+      if (el) {
+        el.style.display = 'flex';
+        // re-trigger animation
+        const card = el.querySelector('.auth-card');
+        if (card) { card.style.animation = 'none'; requestAnimationFrame(() => { card.style.animation = ''; }); }
+      }
+    }
+    window.scrollTo(0,0);
+  }
+
+  /* ─── CHECK SESSION ─── */
+  const sess = sessionStorage.getItem('loggedUser');
+  if (sess) {
+    document.getElementById('loggedAsName').textContent = sess;
+    goTo('dbPage');
+  }
+
+  /* ─── TOGGLE PASSWORD helper ─── */
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.toggle-pwd');
+    if (!btn) return;
+    const target  = document.getElementById(btn.dataset.target);
+    const iconEl  = document.getElementById(btn.dataset.icon);
+    if (!target || !iconEl) return;
+    const show = target.type === 'password';
+    target.type = show ? 'text' : 'password';
+    iconEl.className = show ? 'fas fa-eye-slash' : 'fas fa-eye';
+  });
+
+  /* ─── PASSWORD STRENGTH ─── */
+  function checkStrength(val, barId, txtId) {
+    const bar = document.getElementById(barId);
+    const txt = document.getElementById(txtId);
+    if (!bar || !txt) return;
+    let score = 0;
+    if (val.length >= 6)  score++;
+    if (val.length >= 10) score++;
+    if (/[A-Z]/.test(val) || /[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    bar.className = 'pwd-strength-bar strength-' + score;
+    const labels = ['','Lemah','Cukup','Kuat','Sangat Kuat'];
+    txt.textContent = val ? 'Kekuatan: ' + (labels[score] || '') : 'Masukkan password';
+  }
+
+  document.getElementById('rp').addEventListener('input', function() {
+    checkStrength(this.value, 'strengthBar', 'strengthTxt');
+  });
+  document.getElementById('rnp').addEventListener('input', function() {
+    checkStrength(this.value, 'strengthBar2', 'strengthTxt2');
+  });
+
+  /* ─── SHOW / HIDE msg helpers ─── */
+  function showErr(id, msg) {
+    const el = document.getElementById(id);
+    const tx = document.getElementById(id + 'Txt');
+    if (tx && msg) tx.textContent = msg;
+    if (el) { el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); }
+  }
+  function hideMsg(...ids) { ids.forEach(id => { const el = document.getElementById(id); if (el) el.classList.remove('show'); }); }
+
+  /* ─── LOGIN ─── */
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    hideMsg('loginErr');
+    const username = document.getElementById('lu').value.trim();
+    const password = document.getElementById('lp').value;
+    const btn = document.getElementById('btnLogin');
+
+    btn.classList.add('loading'); btn.disabled = true;
+
+    setTimeout(() => {
+      const acc = findAccount(username);
+      if (acc && acc.password === password) {
+        sessionStorage.setItem('loggedUser', acc.username);
+        document.getElementById('loggedAsName').textContent = acc.username;
+        goTo('dbPage');
+      } else {
+        btn.classList.remove('loading'); btn.disabled = false;
+        showErr('loginErr', 'Username atau password salah. Silakan coba lagi.');
+        document.getElementById('lu').classList.add('is-error');
+        document.getElementById('lp').classList.add('is-error');
+        document.getElementById('lp').value = '';
+        document.getElementById('lp').focus();
+      }
+    }, 750);
+  });
+
+  ['lu','lp'].forEach(id => {
+    document.getElementById(id).addEventListener('input', function() {
+      this.classList.remove('is-error');
+      hideMsg('loginErr');
+    });
+  });
+
+  /* ─── REGISTER ─── */
+  document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    hideMsg('regErr');
+
+    const username = document.getElementById('ru').value.trim();
+    const password = document.getElementById('rp').value;
+    const confirm  = document.getElementById('rp2').value;
+    const question = document.getElementById('rq').value;
+    const answer   = document.getElementById('ra').value.trim();
+    const btn      = document.getElementById('btnRegister');
+
+    if (username.length < 4)  return showErr('regErr', 'Username minimal 4 karakter.');
+    if (password.length < 6)  return showErr('regErr', 'Password minimal 6 karakter.');
+    if (password !== confirm)  return showErr('regErr', 'Konfirmasi password tidak cocok.');
+    if (!question)             return showErr('regErr', 'Pilih pertanyaan keamanan terlebih dahulu.');
+    if (!answer)               return showErr('regErr', 'Jawaban keamanan tidak boleh kosong.');
+
+    if (findAccount(username)) return showErr('regErr', 'Username "' + username + '" sudah terdaftar. Coba username lain.');
+
+    btn.classList.add('loading'); btn.disabled = true;
+
+    setTimeout(() => {
+      const accounts = getAccounts();
+      accounts.push({ username, password, question, answer: answer.toLowerCase() });
+      saveAccounts(accounts);
+
+      btn.classList.remove('loading'); btn.disabled = false;
+      document.getElementById('registerForm').reset();
+      document.getElementById('strengthBar').className = 'pwd-strength-bar';
+      document.getElementById('strengthTxt').textContent = 'Masukkan password';
+
+      // Flash success then redirect to login
+      hideMsg('regErr');
+      // Show a success inline
+      const body = document.querySelector('#registerPage .ac-body');
+      const tmp = document.createElement('div');
+      tmp.className = 'msg-box msg-success show';
+      tmp.innerHTML = '<i class="fas fa-check-circle"></i><span>Akun berhasil dibuat! Silakan login.</span>';
+      body.insertBefore(tmp, body.querySelector('form'));
+      setTimeout(() => { tmp.remove(); goTo('loginPage'); }, 2000);
+    }, 700);
+  });
+
+  /* ─── RESET PASSWORD ─── */
+  let resetUsername = '';
+  let resetStep = 1;
+
+  function setStep(n) {
+    resetStep = n;
+    [1,2,3].forEach(i => {
+      document.getElementById('resetStep'+i).style.display = (i === n) ? 'block' : 'none';
+      const dot = document.getElementById('sd'+i);
+      dot.className = 'step-dot' + (i < n ? ' done' : (i === n ? ' active' : ''));
+    });
+    const subs = ['Masukkan username Anda untuk memulai.','Jawab pertanyaan keamanan Anda.','Buat password baru yang kuat.'];
+    document.getElementById('resetSubText').textContent = subs[n-1];
+    hideMsg('resetErr','resetOk');
+  }
+
+  function resetStep1() {
+    const username = document.getElementById('rsu').value.trim();
+    if (!username) return showErr('resetErr', 'Masukkan username terlebih dahulu.');
+    const acc = findAccount(username);
+    if (!acc) return showErr('resetErr', 'Username tidak ditemukan.');
+    resetUsername = acc.username;
+    document.getElementById('resetQuestionTxt').textContent = QUESTIONS[acc.question] || 'Pertanyaan keamanan';
+    setStep(2);
+  }
+
+  function resetStep2() {
+    const answer = document.getElementById('rsa').value.trim().toLowerCase();
+    if (!answer) return showErr('resetErr', 'Jawaban tidak boleh kosong.');
+    const acc = findAccount(resetUsername);
+    if (!acc || acc.answer !== answer) return showErr('resetErr', 'Jawaban keamanan salah. Coba lagi.');
+    setStep(3);
+  }
+
+  function resetStep3() {
+    const np  = document.getElementById('rnp').value;
+    const np2 = document.getElementById('rnp2').value;
+    if (np.length < 6)  return showErr('resetErr', 'Password minimal 6 karakter.');
+    if (np !== np2)     return showErr('resetErr', 'Konfirmasi password tidak cocok.');
+
+    const btn = document.getElementById('btnStep3');
+    btn.classList.add('loading'); btn.disabled = true;
+
+    setTimeout(() => {
+      const accounts = getAccounts();
+      const idx = accounts.findIndex(a => a.username.toLowerCase() === resetUsername.toLowerCase());
+      if (idx !== -1) accounts[idx].password = np;
+      saveAccounts(accounts);
+
+      btn.classList.remove('loading'); btn.disabled = false;
+      hideMsg('resetErr');
+      document.getElementById('resetOkTxt').textContent = 'Password berhasil diubah! Silakan login dengan password baru.';
+      document.getElementById('resetOk').classList.add('show');
+      document.getElementById('rnp').value  = '';
+      document.getElementById('rnp2').value = '';
+
+      setTimeout(() => { setStep(1); document.getElementById('rsu').value = ''; goTo('loginPage'); }, 2500);
+    }, 700);
+  }
+
+  // Init reset page state
+  setStep(1);
+
+  /* ─── LOGOUT ─── */
+  document.getElementById('btnLogout').addEventListener('click', () => {
+    if (confirm('Yakin ingin keluar?')) {
+      sessionStorage.removeItem('loggedUser');
+      document.getElementById('lu').value = '';
+      document.getElementById('lp').value = '';
+      goTo('loginPage');
+    }
+  });
+
+  /* ─── PATIENT FORM ─── */
+  const patientForm   = document.getElementById('patientForm');
+  const patientNameIn = document.getElementById('patientName');
+  const successMsg    = document.getElementById('successMessage');
+  const errorMsg      = document.getElementById('errorMessage');
+
+  function formatPatientName(name) {
+    name = name.trim();
+    if (name.toLowerCase().startsWith('ny. '))     name = name.substring(4);
+    else if (name.toLowerCase().startsWith('ny')) {
+      name = name.substring(2).trim();
+      if (name.startsWith('. '))     name = name.substring(2);
+      else if (name.startsWith('.')) name = name.substring(1);
+    }
+    return 'Ny. ' + name;
+  }
+
+  patientNameIn.addEventListener('blur', function() {
+    if (this.value.trim()) this.value = formatPatientName(this.value);
+  });
+
+  patientForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!patientForm.checkValidity()) { alert('Mohon lengkapi semua kolom bertanda bintang ya~'); patientForm.reportValidity(); return; }
+    if (patientNameIn.value.trim()) patientNameIn.value = formatPatientName(patientNameIn.value);
+
+    const btn = patientForm.querySelector('.btn-submit');
+    const ori = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-heart fa-beat me-2"></i>Menyimpan...';
+    btn.disabled  = true;
+
+    fetch(patientForm.action, { method:'POST', body: new FormData(patientForm), mode:'no-cors' })
+      .then(() => { successMsg.style.display='block'; errorMsg.style.display='none'; patientForm.reset(); setTimeout(() => successMsg.style.display='none', 6000); })
+      .catch(() => { errorMsg.style.display='block'; successMsg.style.display='none'; })
+      .finally(() => { btn.innerHTML=ori; btn.disabled=false; });
+  });
+</script>
+</body>
+</html>
